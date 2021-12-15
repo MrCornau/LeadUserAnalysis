@@ -25,13 +25,7 @@ python -m spacy download en_core_web_md modell
 We used date from different forum like reddit, github, devpost, twitter to collect subject specific data.
 To use the Matcher you should use the following format for your data. In this[comming soon] series we will explain how we collected the data and formated the corpus.
 
-+----------------------------------+---------------+------------------------+----------+--------------------------------+------------+-----------+---------------------------+--------------------+------------------+
-| origin | suborigin | autor | link | content | date | length | media | medialink | score |
-+----------------------------------+---------------+------------------------+----------+--------------------------------+------------+-----------+---------------------------+--------------------+------------------+
-| Reddit | r/photography | MrCornau | https:// | UsergeneratedContent goes here | timestamp | wordcount | is there Media in the UGC | link to that media | Score/Likes/etc. |
-| Separate | cols | with a tab or 4 spaces | -2,027.1 | | | | | | |
-| This is a row with only one cell | | | | | | | | | |
-+----------------------------------+---------------+------------------------+----------+--------------------------------+------------+-----------+---------------------------+--------------------+------------------+
+<table><tbody><tr><th>origin</th><th>suborigin</th><th>autor</th><th>link</th><th>content</th><th>date</th><th>length</th><th>media</th><th>medialink</th><th>score</th></tr><tr><td>Reddit</td><td>r/photography</td><td>MrCornau</td><td>https://</td><td>UsergeneratedContent goes here</td><td> timestamp</td><td>wordcount</td><td>is there Media in the UGC</td><td>link to that media</td><td>Score/Likes/etc.</td></tr></tbody></table>
 
 ## 1. Word 2 Vec
 
