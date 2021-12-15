@@ -3,3 +3,6 @@ venv
 settings.json
 
 data/**
+
+*.csv
+!spec/*.csv

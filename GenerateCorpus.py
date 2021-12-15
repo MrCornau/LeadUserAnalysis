@@ -14,7 +14,9 @@ from datetime import datetime
 import spacy
 
 
-nlp = spacy.load("en_core_web_md")
+nlp = spacy.load("/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Word2Vec/Core20e.model")
+
+#%%
 datapath = '/Users/joshcornau/Code/SpaCy_FirstModel/Big_Data/Photrio_Format.json'
 
 
@@ -46,6 +48,10 @@ for idx, File in enumerate(Paths):
     })
 
 print(df[0])
+
+#%%
+
+print(len(df))
 
 #%%
 def countWords(Analyse):
@@ -89,16 +95,17 @@ for idx, file in enumerate(df):
                 "comments":int(df[idx]['content'].num_comments[idx2]),
                 "media":str(df[idx]['content'].post_hint[idx2]),
                 "medialink":str(df[idx]['content'].url[idx2]),
-                "length":countWords(analyse)
+                # "length":countWords(analyse)
         })
+    print(idx)
 
 # print(interestingcomments['interestingcomments'][3])
 
 
 #%%
 
-data = json.loads(f.read())
-allfiles = pd.json_normalize( data, record_path=['interestingcomments'])
+# data = json.loads(f.read())
+allfiles = pd.json_normalize( interestingcomments, record_path=['interestingcomments'])
 removedDuplicates = allfiles.drop_duplicates()
 removedDuplicates.shape
 
@@ -125,4 +132,46 @@ doc = nlp(test)
 len(doc)
 i=0
 
+# %%
+removedDuplicates.groupby('suborigin').count()
+
+# %%
+Redd = removedDuplicates.loc[removedDuplicates["suborigin"] == 'nan']
+
+Redd.tail()
+# %%
+
+test='https://www.reddit.com/r/arduino/comments/mjtu'
+
+
+
+print()
+# %%
+
+
+def RemoveNum(test):
+    return(test.split('/')[4])
+
+
+Redd['suborigin'] = Redd['link'].apply(RemoveNum)
+
+Redd.head()
+# %%
+
+new = Redd = removedDuplicates.loc[removedDuplicates["suborigin"] != 'nan']
+
+corecorp = pd.concat([new,Redd])
+
+corecorp.groupby('suborigin').count()
+# %%
+
+corecorp.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/ReditCore.csv')
+# %%
+
+
+
+doc1 = nlp("I shit in the shower.")
+# doc2 = nlp("I invented a new machine")
+doc2 = nlp("To help myself, I created a Map Editor system based on WordPress a few years ago, and photography friends also got interested and started using it.")
+doc1.similarity(doc2)
 # %%
