@@ -19,6 +19,10 @@ from sklearn.decomposition import PCA
 # define training data
 
 #%%
+model = Word2Vec.load("/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Word2Vec/Core5e.model")
+
+
+#%%
 df = pd.read_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/ReditCore.csv')
 df.head()
 
@@ -69,7 +73,7 @@ model.wv.most_similar('tool', topn=10)
 
 #%%
 
-model.wv.similar_by_word('tool', topn=10)
+model.wv.similar_by_word('plant', topn=10)
 
 #%%
 

@@ -22,9 +22,12 @@ reload(matcherFunctions)
 nlp = spacy.load("en_core_web_md")
 
 # %%
-df = pd.read_csv('/Users/joshcornau/Code/LeadUserAnalysis/ReditCore_ID.csv')
+df = pd.read_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/Forestry.csv', lineterminator='\n')
 df.head()
 
+
+#%%
+df.shape
 
 # doc = nlp("I used a Hedge Trimmer lastly. Also i haaad a big big wrench")
 # matches = Toolmatcher(doc)
@@ -187,7 +190,7 @@ IdeaMatcher.add("Idea", [Idea])
 
 # %%
 print(df.shape)
-removed = df.dropna(subset=['content'])
+removed = df.drop_duplicates(subset=['content'])
 removed.shape
 # %%
 removed.at[3,'content']='I have created a new kind of garden.'
@@ -249,7 +252,7 @@ counter = 0
 Newfile = []
 df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin', 'result', 'Selector', 'selectorShort', 'MarkedSent', 'sortedWord','removed','score','comments','media','medialink','identifyer'
                             ])
-for idx, row in removed.iloc[:5000].iterrows():
+for idx, row in removed.iterrows():
     newrow = []
     # print(idx)
     MatchResults = None
@@ -263,7 +266,7 @@ for idx, row in removed.iloc[:5000].iterrows():
                     row.link, row.origin, row.suborigin, MatchResults['Matcher'], MatchResults['Selector'], MatchResults['selectorShort'], MatchResults['MarkedSent'], MatchResults['sortedWord'],row.removed,row.score,row.comments,row.media,row.medialink,row.identifyer]
     if(counter == 1000):
         counter = 0
-        with open('/Users/joshcornau/Code/SpaCy_FirstModel/Big_Data/CoreRedd_ID_Analysed.json', 'w') as outfile:
+        with open('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Forestry.json', 'w') as outfile:
             ad = df3.to_json(orient="records")
             interestingcommment["interestingcomments"] = json.loads(ad)
             interestingcommment['name'] = 'Matchertest'
@@ -272,7 +275,8 @@ for idx, row in removed.iloc[:5000].iterrows():
     counter += 1
 
 
-
+#%%
+df3.shape
 #%%
 
 df3.groupby('result').count()
@@ -282,12 +286,40 @@ Selected=df3.loc[df3["result"] == True]
 
 
 #%%
-Selected.to_csv('selected.csv')
+df3.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/ForestryAnalysed.csv')
 
 
 # %%
-with open('/Users/joshcornau/Code/SpaCy_FirstModel/Big_Data/Test30.json', 'w') as outfile:
-    ad = df3.to_json(orient="records")
+with open('Core_Twitter_Selected.json', 'w') as outfile:
+    ad = Selected.to_json(orient="records")
     interestingcommment["interestingcomments"] = json.loads(ad)
     interestingcommment['name'] = 'Matchertest'
     json.dump(interestingcommment, outfile)
+
+# %%
+print(eval(Selected.loc[6695,'autor'])['username'])
+#%%
+
+def GetUsername(username):
+    return eval(username)['username']
+    # return(test.split('/')[4])
+
+Selected['autor_infomation'] = Selected['autor']
+
+# Selected['autor']
+Selected['autor']= Selected['autor'].apply(GetUsername)
+
+Selected.head()
+
+# %%
+
+
+
+# %%
+with open('Core_Twitter_Selected.json', 'w') as outfile:
+    ad = Selected.to_json(orient="records")
+    interestingcommment["interestingcomments"] = json.loads(ad)
+    interestingcommment['name'] = 'Matchertest'
+    json.dump(interestingcommment, outfile)
+
+# %%

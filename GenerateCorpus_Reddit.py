@@ -1,3 +1,4 @@
+
 # %%
 from os.path import isfile, join
 from os import listdir
@@ -14,14 +15,14 @@ from datetime import datetime
 import spacy
 
 
-nlp = spacy.load("/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Word2Vec/Core20e.model")
+nlp = spacy.load("en_core_web_md")
 
 #%%
 datapath = '/Users/joshcornau/Code/SpaCy_FirstModel/Big_Data/Photrio_Format.json'
 
 
 #%%
-mypath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Reddit'
+mypath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Trend/Reddit/Phase_2/'
 Paths = []
 for (dirpath, dirnames, filenames) in walk(mypath):
 
@@ -49,9 +50,23 @@ for idx, File in enumerate(Paths):
 
 print(df[0])
 
+
+#%%
+
+List = []
 #%%
 
 print(len(df))
+
+#%%
+print(len(List))
+
+#%%
+alltweets= pd.concat(df)
+alltweets.shape
+#%%
+
+
 
 #%%
 def countWords(Analyse):
@@ -80,21 +95,37 @@ for idx, file in enumerate(df):
         except Exception as e:
             analyse = ' '
 
+
+        try:
+            upvote_ratio = df[idx]['content'].upvote_ratio[idx2]
+        except Exception as e:
+            upvote_ratio='Nan'
+        try:
+            removed = str(df[idx]['content'].removed_by_category[idx2]),
+        except Exception as e:
+            removed = 'Nan'
+        try:
+            media = str(df[idx]['content'].post_hint[idx2]),
+            medialink = str(df[idx]['content'].url[idx2]),
+        except Exception as e:
+            media = 'Nan'
+            medialink = 'Nan'
+
         interestingcomments['interestingcomments'].append({
                 "origin": "Reddit",
                 "suborigin": str(df[idx]['content'].subreddit[idx2]),
-                "removed": str(df[idx]['content'].removed_by_category[idx2]),
+                "removed":removed,
                 "autor":  str(df[idx]['content'].author[idx2]),
                 "link":  str(df[idx]['content'].full_link[idx2]),
                 "title": str(df[idx]['content'].title[idx2]),
                 "text": str(df[idx]['content'].selftext[idx2]),
                 "content":analyse,
                 "score": int(df[idx]['content'].score[idx2]),
-                "upvote_ratio": df[idx]['content'].upvote_ratio[idx2],
+                "upvote_ratio": upvote_ratio,
                 "date": str(datetime.utcfromtimestamp(df[idx]['content'].created_utc[idx2])),
                 "comments":int(df[idx]['content'].num_comments[idx2]),
-                "media":str(df[idx]['content'].post_hint[idx2]),
-                "medialink":str(df[idx]['content'].url[idx2]),
+                "media":media,
+                "medialink":medialink,
                 # "length":countWords(analyse)
         })
     print(idx)
@@ -121,16 +152,6 @@ removedDuplicates.shape
 
 
 
-
-test = "blaaaa ( blaaaaa) ' blaaaaa ' https://www.ritter-sport.com/long-term-partnerships .. ."
-
-
-len(test)
-
-doc = nlp(test)
-
-len(doc)
-i=0
 
 # %%
 removedDuplicates.groupby('suborigin').count()
@@ -165,13 +186,6 @@ corecorp = pd.concat([new,Redd])
 corecorp.groupby('suborigin').count()
 # %%
 
-corecorp.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/ReditCore.csv')
+removedDuplicates.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Trend/Reddit/Phase_2.csv')
 # %%
 
-
-
-doc1 = nlp("I shit in the shower.")
-# doc2 = nlp("I invented a new machine")
-doc2 = nlp("To help myself, I created a Map Editor system based on WordPress a few years ago, and photography friends also got interested and started using it.")
-doc1.similarity(doc2)
-# %%
