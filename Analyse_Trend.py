@@ -22,7 +22,7 @@ reload(matcherFunctions)
 nlp = spacy.load("en_core_web_md")
 
 # %%
-df = pd.read_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Trend/Reddit/Phase_2.csv', lineterminator='\n')
+df = pd.read_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/Github.csv', lineterminator='\n')
 df.head()
 
 
@@ -43,7 +43,7 @@ df.shape
 #%%
 
 SubjectMatcher = PhraseMatcher(nlp.vocab, attr="LOWER")
-SubjectsSpecificWords = ['garden','outdoor','tree','grass','lawn','trunk','branch','leaf','forestry','harvesting','tool','tool','drilling machine','chain saw','wood cutter','hedge trimmer','axe', 'estwing', 'spokeshave', 'klopp', 'sbt', 'igorot', 'rehandle', 'metalwork', 'wiss', 'hatchet', 'gague', 'excavator', 'lovechild', 'alaskan', 'antique', 'estwing', 'deermanagement', 'ibanez','lawnmower', 'rider', 'toro', 'mowers', 'tractor', 'snapper', 'mowr', 'propelled', 'hustler',
+SubjectsSpecificWords = ['garden','outdoor','tree','grass','lawn','trunk','leaf','forestry','harvesting','tool','tool','drilling machine','chain saw','wood cutter','hedge trimmer','axe', 'estwing', 'spokeshave', 'klopp', 'sbt', 'igorot', 'rehandle', 'metalwork', 'wiss', 'hatchet', 'gague', 'excavator', 'lovechild', 'alaskan', 'antique', 'estwing', 'deermanagement', 'ibanez','lawnmower', 'rider', 'toro', 'mowers', 'tractor', 'snapper', 'mowr', 'propelled', 'hustler',
 'chainsaw','rock cutter', 'cut-off machine', 'cut-off saw', 'high pruner', 'power saws', 'hedge trimmers', 'hedge cutter', 'wood trimmer', 'hatchet', 'axe', 'mower', 'lawn mower','garden shears', 'branch saws', 'loppers','forestry tools','protective equipment',
 'garden shredder','lawn trimmer','power scythes', 'robotic mower', 'mulching lawn mower', 'lawn aerator', 'scarifier', 'motor hoes', 'power hoes', 'power tillers', 'ride-on mower', 'riding mower', 'earth drilling rigs', 'sprayers','wrench','harvesting','sapling','stump','bush','shrub','pines','branches','tress','dogwood','conifer','backyard','gardens','yard','patio','plot','beds','flowerbed','bed','planter','farming','shrub','prune']
 
@@ -125,15 +125,13 @@ for idx, row in removed.iloc[:5000].iterrows():
                     row.link, row.origin, row.suborigin, MatchResults['Matcher'], MatchResults['Selector'], MatchResults['selectorShort'], MatchResults['MarkedSent'], MatchResults['sortedWord'],row.removed,row.score,row.comments,row.media,row.medialink,row.identifyer]
     if(counter == 1000):
         counter = 0
-        with open('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Reddit/Phase_1_3.json', 'w') as outfile:
-            ad = df3.to_json(orient="records")
-            interestingcommment["interestingcomments"] = json.loads(ad)
-            interestingcommment['name'] = 'Matchertest'
-            json.dump(interestingcommment, outfile)
+        df3.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Github/selectedGithub.csv')
         print('1000')
     counter += 1
 
 
+#%%
+df3.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Github/selectedGithub.csv')
 
 #%%
 with open('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Reddit/Phase_1_3.json', 'w') as outfile:

@@ -18,9 +18,11 @@ import pandas as pd
 
 
 #%%
-path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Reddit/Reddit_Garden_NLPed.csv"
+path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Github/selectedGithub.csv"
 data = pd.read_csv(path)
 
+#%%
+data.head()
 #%%
 path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost_Core.json"
 with open(path, 'r') as f:
@@ -102,7 +104,6 @@ folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Reddit/Selec
 
 
 for sub in s_list:
-
     redpath = folder+sub.replace("/", "_")
     print(redpath)
     os.mkdir(redpath)
@@ -136,26 +137,24 @@ Output = SelectedP
 interestingcommment = {}
 interestingcommment["interestingcomments"] = []
 
-folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Forestry/'
-
+folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Github/Github/'
 
 for sub in s_list:
-
-    redpath = folder
-    # print(redpath)
-    for item in a_list:
-        for word in w_list:
-            Name = word+item
-            Df_00 = Output.loc[Output["selectorShort"] == word]
-            Df_File = Df_00.loc[Df_00["year"] == item]
-            interestingcommment = {}
-            interestingcommment["interestingcomments"] = []
-            if Df_File.shape[0] > 0:
-                with open(redpath+'/'+Name+'.json', 'w') as outfile:
-                    filetojson = Df_File.to_json(orient="records")
-                    interestingcommment["interestingcomments"] = json.loads(
-                        filetojson)
-                    interestingcommment['name'] = Name
-                    json.dump(interestingcommment, outfile)
+    redpath = folder+sub
+    print(redpath)
+    os.mkdir(redpath)
+    for word in w_list:
+        Name = word+sub
+        Df_00 = Output.loc[Output["selectorShort"] == word]
+        Df_File = Df_00.loc[Df_00["suborigin"] == sub]
+        interestingcommment = {}
+        interestingcommment["interestingcomments"] = []
+        if Df_File.shape[0] > 0:
+            with open(redpath+'/'+Name+'.json', 'w') as outfile:
+                filetojson = Df_File.to_json(orient="records")
+                interestingcommment["interestingcomments"] = json.loads(
+                    filetojson)
+                interestingcommment['name'] = Name
+                json.dump(interestingcommment, outfile)
 
 # %%
