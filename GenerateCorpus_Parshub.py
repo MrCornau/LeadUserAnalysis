@@ -29,6 +29,17 @@ nlp = spacy.load("en_core_web_md")
 #    "Description": "Inspiration - to help peoples to save them from weather damage\nWhat it does- it helps to know the right weather to us and get ready for the precautions\nHow we built it - By using knowledge of c , c++ and java\nChallenges we ran into- lots of challenges like time saving , errors\nAccomplishments that we're proud of\nWhat we learned-too much knowledge\nWhat's next for Weathering with precautions --many more to do this for make it better"
 #   },
 
+
+# #Devpost
+#  "Post": [
+#   {
+#    "name": "Weathering with precautions",
+#    "url": "https://devpost.com/software/weathering-with-precautions",
+#    "Likes": "0",
+#    "Comments": "0",
+#    "Description": "Inspiration - to help peoples to save them from weather damage\nWhat it does- it helps to know the right weather to us and get ready for the precautions\nHow we built it - By using knowledge of c , c++ and java\nChallenges we ran into- lots of challenges like time saving , errors\nAccomplishments that we're proud of\nWhat we learned-too much knowledge\nWhat's next for Weathering with precautions --many more to do this for make it better"
+#   },
+
 datapath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/parsehub_devpost.json'
 
 
@@ -257,10 +268,94 @@ print(len(Corpus))
 
 #%%
 AnalyseFile= pd.DataFrame(data=Corpus)
-AnalyseFile.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/Github.csv')
+AnalyseFile.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Toolsinaction.csv')
 AnalyseFile.head()
 
 
+
+
+#%% - cracy Tools
+# {
+#  "Category": [
+#   {
+#    "Category_Name": "Forestry Forum Pod Casts",
+#    "Thread": [
+#     {
+#      "Threadname": "Podcast",
+#      "Post": [
+#       {
+#        "Body": "I would listen to a podcast for sure. This Newbie needs a lot of help learning.",
+#        "Author": "Kemp",
+#        "Date": "« on: February 13, 2019, 04:34:47 AM »",
+#        "Link_url": "https://forestryforum.com/board/index.php?topic=105099.msg1635802#msg1635802"
+#       },
+
+
+
+datapath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/parsehub_Toolsinaction.json'
+with open(datapath, 'r') as f:
+        ToolsInAction = json.loads(f.read())
+        # resArduino= pd.json_normalize(Arduino,record_path=['Projecttitle'])
+        # resArduino['suborigin']='arduino'
+
+
+#%%
+
+print(len(ToolsInAction['Category']))
+print(ToolsInAction['Category'][0]['Thread'][0]['Post'][0])
+
+
+#%%
+
+Corpus=[]
+for idx, file in enumerate(ToolsInAction['Category']):
+    suborigin = file['Category_name']
+    print(suborigin)
+    try:
+        for idx2, thread in enumerate(file['Thread']):
+            print(len(thread['Post']))
+            for idx3, post in enumerate(thread['Post']):
+                try:
+                    autor = post['Author']
+                except Exception as e:
+                    autor='Nan'
+                try:
+                    content = post['Body'],
+                except Exception as e:
+                    content = 'Nan'
+                try:
+                    date = post['Date'],
+                except Exception as e:
+                    date = 'Nan'
+                try:
+                    link = post['selection1_url'],
+                except Exception as e:
+                    link = 'Nan'
+
+                Corpus.append({
+                    "autor": autor,
+                    "date":date, 
+                    "content":content,
+                    "link":link,
+                    "origin": 'Toolsinaction',
+                    "suborigin": suborigin,
+                    "removed":"Nan",
+                    "score":'Nan',
+                    "comments":'Nan',
+                    "media":'nan',
+                    "medialink":'nan',
+                    "identifyer":idx+134000000
+                })
+    except Exception as e:
+        print('none')
+print('done')
+
+
+#%%
+AnalyseFile= pd.DataFrame(data=Corpus)
+
+
+AnalyseFile.head()
 #%%
 
 print(len(Corpus))
@@ -310,6 +405,8 @@ for (dirpath, dirnames, filenames) in walk(mypath):
     break
 
 print(Paths)
+
+
 
 
 #%%

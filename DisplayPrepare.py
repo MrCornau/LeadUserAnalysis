@@ -1,6 +1,6 @@
 
 
-#%%
+# %%
 from os.path import isfile, join
 from os import listdir
 from os import walk
@@ -17,20 +17,22 @@ from datetime import datetime
 import pandas as pd
 
 
-#%%
-path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Github/selectedGithub.csv"
+# %%
+path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/ToolsInAction.csv"
 data = pd.read_csv(path)
 
-#%%
+# %%
 data.head()
-#%%
+# %%
 path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost_Core.json"
 with open(path, 'r') as f:
-        jsonFile = json.loads(f.read())
-data= pd.json_normalize(jsonFile,record_path=['interestingcomments'])
+    jsonFile = json.loads(f.read())
+data = pd.json_normalize(jsonFile, record_path=['interestingcomments'])
 data.head()
 
 # %%
+
+
 def PDDate(Daylie):
     try:
         return pd.to_datetime(Daylie)
@@ -55,15 +57,13 @@ def YearlyDate(Daylie):
     except Exception as e:
         return None
 
+
 data['year'] = data['date'].apply(YearlyDate)
 data.head()
 dates = data.groupby('year').count()
 dates.head(15)
 
-#%%
-newdata = data[360000:]
-
-#%%
+# %%
 data.shape
 # %%
 SelectedP = data.loc[data["result"] == True]
@@ -91,7 +91,6 @@ files = SelectedP.groupby('suborigin').count()
 test = files.index
 s_list = list(test)
 print(s_list)
-
 
 
 # %%
@@ -152,6 +151,33 @@ for sub in s_list:
         if Df_File.shape[0] > 0:
             with open(redpath+'/'+Name+'.json', 'w') as outfile:
                 filetojson = Df_File.to_json(orient="records")
+                interestingcommment["interestingcomments"] = json.loads(
+                    filetojson)
+                interestingcommment['name'] = Name
+                json.dump(interestingcommment, outfile)
+
+# %%
+
+
+# %%
+Name = "Year&Word"
+Output = SelectedP
+interestingcommment = {}
+interestingcommment["interestingcomments"] = []
+
+folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/ToolsInAction/'
+
+for year in a_list:
+    redpath = folder
+    print(redpath)
+    for word in w_list:
+        Name = word+year
+        Df_00 = Output.loc[Output["selectorShort"] == word]
+        interestingcommment = {}
+        interestingcommment["interestingcomments"] = []
+        if Df_00.shape[0] > 0:
+            with open(redpath+'/'+Name+'.json', 'w') as outfile:
+                filetojson = Df_00.to_json(orient="records")
                 interestingcommment["interestingcomments"] = json.loads(
                     filetojson)
                 interestingcommment['name'] = Name
