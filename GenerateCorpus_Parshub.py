@@ -17,9 +17,9 @@ import spacy
 
 nlp = spacy.load("en_core_web_md")
 
-#%%
-#Parshub
-#Structure:
+# %%
+# Parshub
+# Structure:
 # "Post": [
 #   {
 #    "name": "Weathering with precautions",
@@ -29,6 +29,16 @@ nlp = spacy.load("en_core_web_md")
 #    "Description": "Inspiration - to help peoples to save them from weather damage\nWhat it does- it helps to know the right weather to us and get ready for the precautions\nHow we built it - By using knowledge of c , c++ and java\nChallenges we ran into- lots of challenges like time saving , errors\nAccomplishments that we're proud of\nWhat we learned-too much knowledge\nWhat's next for Weathering with precautions --many more to do this for make it better"
 #   },
 
+
+# Instructables:
+#  "Post": [
+#   {
+#    "name": "Ice Spikes",
+#    "url": "https://www.instructables.com/Ice-Spikes/",
+#    "Views": "60",
+#    "Brief": "For extra traction on those icy days. Easy and quick to get on and off.",
+#    "Author": "More by the author:"
+#   },
 
 # #Devpost
 #  "Post": [
@@ -40,37 +50,39 @@ nlp = spacy.load("en_core_web_md")
 #    "Description": "Inspiration - to help peoples to save them from weather damage\nWhat it does- it helps to know the right weather to us and get ready for the precautions\nHow we built it - By using knowledge of c , c++ and java\nChallenges we ran into- lots of challenges like time saving , errors\nAccomplishments that we're proud of\nWhat we learned-too much knowledge\nWhat's next for Weathering with precautions --many more to do this for make it better"
 #   },
 
-datapath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/parsehub_devpost.json'
+datapath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/_Input/parsehub_Instructables.json'
 
 
 with open(datapath, 'r') as f:
-        jsonFile = json.loads(f.read())
-res= pd.json_normalize(jsonFile,record_path=['Post'])
+    jsonFile = json.loads(f.read())
+res = pd.json_normalize(jsonFile, record_path=['Post'])
 res.head()
 
-#%%
-res.shape
-#%%
+# %%
 
-df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin','removed','score','comments','media','medialink','identifyer'
+res = res.rename(columns={"name": "Name"})
+res.head()
+# %%
+
+df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin', 'removed', 'score', 'comments', 'media', 'medialink', 'identifyer'
                             ])
 
-Corpus=[]
+Corpus = []
 for idx, row in res.iterrows():
     print(idx)
     Corpus.append({
-        "autor": row.name,
-         "date":'nan', 
-         "content":row.Description,
-         "link":row.url,
-         "origin": 'Devpost',
-         "suborigin": 'Devpost',
-         "removed":"Nan",
-         "score":row.Likes,
-         "comments":row.Comments,
-         "media":'nan',
-         "medialink":'nan',
-         "identifyer":idx+3000000
+        "autor": row.Author,
+        "date": 'nan',
+        "content": str(str(row.Name)+'__'+str(row.Brief)),
+        "link": row.url,
+        "origin": 'Instructables',
+        "suborigin": 'Instructables',
+        "removed": "Nan",
+        "score": row.Views,
+        "comments": 'nan',
+        "media": 'nan',
+        "medialink": 'nan',
+        "identifyer": idx+7900000
     })
 
 
@@ -80,14 +92,14 @@ for idx, row in res.iterrows():
 # df.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/test.csv',)
 
 
-#%%
-AnalyseFile= pd.DataFrame(data=Corpus)
-AnalyseFile.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost.csv')
+# %%
+AnalyseFile = pd.DataFrame(data=Corpus)
+AnalyseFile.to_csv(
+    '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/Instructables.csv')
 AnalyseFile.head()
 
-
-
-#-––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# %%
+# -––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 # "Category": [
 #   {
@@ -139,29 +151,27 @@ AnalyseFile.head()
 #      ]
 #     },
 
-#Body, Author, Date, 
+#Body, Author, Date,
 
 
-
-#%%
+# %%
 datapath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/parsehub_Forestry_hopefullywithurl.json'
 
 
 with open(datapath, 'r') as f:
-        jsonFile = json.loads(f.read())
-res= pd.json_normalize(jsonFile,record_path=['Category'])
+    jsonFile = json.loads(f.read())
+res = pd.json_normalize(jsonFile, record_path=['Category'])
 res.head()
 
 
-
-#%%
+# %%
 
 print(len(jsonFile['Category']))
 print(jsonFile['Category'][0]['Category_Name'])
 
 # print(jsonFile['Category'][0]['Thread'][0]['Post'])
-#%%
-Corpus=[]
+# %%
+Corpus = []
 for idx, file in enumerate(jsonFile['Category']):
     suborigin = file['Category_Name']
     print(suborigin)
@@ -172,7 +182,7 @@ for idx, file in enumerate(jsonFile['Category']):
                 try:
                     autor = post['Author']
                 except Exception as e:
-                    autor='Nan'
+                    autor = 'Nan'
                 try:
                     content = post['Body'],
                 except Exception as e:
@@ -186,26 +196,25 @@ for idx, file in enumerate(jsonFile['Category']):
 
                 Corpus.append({
                     "autor": autor,
-                    "date":date, 
-                    "content":content,
-                    "link":link,
+                    "date": date,
+                    "content": content,
+                    "link": link,
                     "origin": 'Forestry',
                     "suborigin": suborigin,
-                    "removed":"Nan",
-                    "score":'Nan',
-                    "comments":'Nan',
-                    "media":'nan',
-                    "medialink":'nan',
-                    "identifyer":idx+4000000
+                    "removed": "Nan",
+                    "score": 'Nan',
+                    "comments": 'Nan',
+                    "media": 'nan',
+                    "medialink": 'nan',
+                    "identifyer": idx+4000000
                 })
     except Exception as e:
         print('none')
 print('done')
 
 
-
-#%%
-#Structure Github
+# %%
+# Structure Github
 # {
 #  "Projecttitle": [
 #   {
@@ -220,61 +229,59 @@ datapath3 = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/pa
 
 
 with open(datapath, 'r') as f:
-        Arduino = json.loads(f.read())
-        resArduino= pd.json_normalize(Arduino,record_path=['Projecttitle'])
-        resArduino['suborigin']='arduino'
+    Arduino = json.loads(f.read())
+    resArduino = pd.json_normalize(Arduino, record_path=['Projecttitle'])
+    resArduino['suborigin'] = 'arduino'
 
 with open(datapath2, 'r') as f:
-        Robotics = json.loads(f.read())
-        resRobotics= pd.json_normalize(Robotics,record_path=['Projecttitle'])
-        resRobotics['suborigin']='robotics'
+    Robotics = json.loads(f.read())
+    resRobotics = pd.json_normalize(Robotics, record_path=['Projecttitle'])
+    resRobotics['suborigin'] = 'robotics'
 
 with open(datapath3, 'r') as f:
-        IoT = json.loads(f.read())
-        resIot= pd.json_normalize(IoT,record_path=['Projecttitle'])
-        resIot['suborigin']='Iot'
-        
-#%%
-combined = pd.concat([resIot,resRobotics,resArduino])
-#%%
+    IoT = json.loads(f.read())
+    resIot = pd.json_normalize(IoT, record_path=['Projecttitle'])
+    resIot['suborigin'] = 'Iot'
+
+# %%
+combined = pd.concat([resIot, resRobotics, resArduino])
+# %%
 combined.shape
 
-#%%
-df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin','removed','score','comments','media','medialink','identifyer'
+# %%
+df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin', 'removed', 'score', 'comments', 'media', 'medialink', 'identifyer'
                             ])
 
-Corpus=[]
+Corpus = []
 for idx, row in combined.iterrows():
     print(idx)
     Corpus.append({
         "autor": row.name,
-         "date":'nan', 
-         "content":row.Body,
-         "link":row.url,
-         "origin": 'Github',
-         "suborigin": row.suborigin,
-         "removed":"Nan",
-         "score":'NaN',
-         "comments":'NaN',
-         "media":'Nan',
-         "medialink":'Nan',
-         "identifyer":idx+7000000
+        "date": 'nan',
+        "content": row.Body,
+        "link": row.url,
+        "origin": 'Github',
+        "suborigin": row.suborigin,
+        "removed": "Nan",
+        "score": 'NaN',
+        "comments": 'NaN',
+        "media": 'Nan',
+        "medialink": 'Nan',
+        "identifyer": idx+7000000
     })
 
-#%%
+# %%
 print(len(Corpus))
 
 
-
-#%%
-AnalyseFile= pd.DataFrame(data=Corpus)
-AnalyseFile.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Toolsinaction.csv')
+# %%
+AnalyseFile = pd.DataFrame(data=Corpus)
+AnalyseFile.to_csv(
+    '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Toolsinaction.csv')
 AnalyseFile.head()
 
 
-
-
-#%% - cracy Tools
+# %% - cracy Tools
 # {
 #  "Category": [
 #   {
@@ -291,23 +298,22 @@ AnalyseFile.head()
 #       },
 
 
-
 datapath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/parsehub_Toolsinaction.json'
 with open(datapath, 'r') as f:
-        ToolsInAction = json.loads(f.read())
-        # resArduino= pd.json_normalize(Arduino,record_path=['Projecttitle'])
-        # resArduino['suborigin']='arduino'
+    ToolsInAction = json.loads(f.read())
+    # resArduino= pd.json_normalize(Arduino,record_path=['Projecttitle'])
+    # resArduino['suborigin']='arduino'
 
 
-#%%
+# %%
 
 print(len(ToolsInAction['Category']))
 print(ToolsInAction['Category'][0]['Thread'][0]['Post'][0])
 
 
-#%%
+# %%
 
-Corpus=[]
+Corpus = []
 for idx, file in enumerate(ToolsInAction['Category']):
     suborigin = file['Category_name']
     print(suborigin)
@@ -318,7 +324,7 @@ for idx, file in enumerate(ToolsInAction['Category']):
                 try:
                     autor = post['Author']
                 except Exception as e:
-                    autor='Nan'
+                    autor = 'Nan'
                 try:
                     content = post['Body'],
                 except Exception as e:
@@ -334,67 +340,67 @@ for idx, file in enumerate(ToolsInAction['Category']):
 
                 Corpus.append({
                     "autor": autor,
-                    "date":date, 
-                    "content":content,
-                    "link":link,
+                    "date": date,
+                    "content": content,
+                    "link": link,
                     "origin": 'Toolsinaction',
                     "suborigin": suborigin,
-                    "removed":"Nan",
-                    "score":'Nan',
-                    "comments":'Nan',
-                    "media":'nan',
-                    "medialink":'nan',
-                    "identifyer":idx+134000000
+                    "removed": "Nan",
+                    "score": 'Nan',
+                    "comments": 'Nan',
+                    "media": 'nan',
+                    "medialink": 'nan',
+                    "identifyer": idx+134000000
                 })
     except Exception as e:
         print('none')
 print('done')
 
 
-#%%
-AnalyseFile= pd.DataFrame(data=Corpus)
+# %%
+AnalyseFile = pd.DataFrame(data=Corpus)
 
 
 AnalyseFile.head()
-#%%
+# %%
 
 print(len(Corpus))
-#%%
+# %%
 res.shape
-#%%
+# %%
 
-df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin','removed','score','comments','media','medialink','identifyer'
+df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin', 'removed', 'score', 'comments', 'media', 'medialink', 'identifyer'
                             ])
 
-Corpus=[]
+Corpus = []
 for idx, row in res.iterrows():
     print(idx)
     Corpus.append({
         "autor": row.name,
-         "date":'nan', 
-         "content":row.Description,
-         "link":row.url,
-         "origin": 'Devpost',
-         "suborigin": 'Devpost',
-         "removed":"Nan",
-         "score":row.Likes,
-         "comments":row.Comments,
-         "media":'nan',
-         "medialink":'nan',
-         "identifyer":idx+3000000
+        "date": 'nan',
+        "content": row.Description,
+        "link": row.url,
+        "origin": 'Devpost',
+        "suborigin": 'Devpost',
+        "removed": "Nan",
+        "score": row.Likes,
+        "comments": row.Comments,
+        "media": 'nan',
+        "medialink": 'nan',
+        "identifyer": idx+3000000
     })
 
 
 Corpus.head()
 
-#%%
-AnalyseFile= pd.DataFrame(data=Corpus)
-AnalyseFile.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost.csv')
+# %%
+AnalyseFile = pd.DataFrame(data=Corpus)
+AnalyseFile.to_csv(
+    '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost.csv')
 AnalyseFile.head()
 
 
-
-#%%
+# %%
 mypath = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Twitter_Core/'
 Paths = []
 for (dirpath, dirnames, filenames) in walk(mypath):
@@ -407,74 +413,70 @@ for (dirpath, dirnames, filenames) in walk(mypath):
 print(Paths)
 
 
-
-
-#%%
+# %%
 
 List = []
 for idx, File in enumerate(Paths):
     path = mypath+File
     res = pd.read_json(path, lines=True)
     List.append(res
-    )
+                )
 
-#%%
-alltweets= pd.concat(List)
+# %%
+alltweets = pd.concat(List)
 alltweets.shape
-#%%
+# %%
 
-df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin','removed','score','comments','media','medialink','identifyer'
+df3 = pd.DataFrame(columns=['autor', 'date', 'content', 'link', 'origin', 'suborigin', 'removed', 'score', 'comments', 'media', 'medialink', 'identifyer'
                             ])
 
-Corpus=[]
+Corpus = []
 for idx, row in alltweets.iterrows():
     print(idx)
     Corpus.append({
         "autor": row.user,
-         "date":row.date, 
-         "content":row.renderedContent,
-         "link":row.url,
-         "origin": 'Twitter',
-         "suborigin": row.hashtags,
-         "removed":"Nan",
-         "score":row.likeCount,
-         "comments":row.replyCount,
-         "media":row.media,
-         "medialink":row.media,
-         "identifyer":row.id
+        "date": row.date,
+        "content": row.renderedContent,
+        "link": row.url,
+        "origin": 'Twitter',
+        "suborigin": row.hashtags,
+        "removed": "Nan",
+        "score": row.likeCount,
+        "comments": row.replyCount,
+        "media": row.media,
+        "medialink": row.media,
+        "identifyer": row.id
     })
-#%%
+# %%
 print(len(Corpus))
 # df3.shape
-#%%
+# %%
 
 
-
-new= pd.DataFrame(data=Corpus)
-new.to_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/Forestry.csv')
+new = pd.DataFrame(data=Corpus)
+new.to_csv(
+    '/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/Forestry.csv')
 new.head()
-#%%
+# %%
 new.shape
-#%%
+# %%
 
-#%%
+# %%
+
+
 def countWords(Analyse):
     doc = nlp(Analyse)
-    i=0
+    i = 0
     for token in doc:
-        if(token.pos_ !='PUNCT'):
-            i+=1
+        if(token.pos_ != 'PUNCT'):
+            i += 1
     return(i)
 
 
-
-
-
-#%%
-
-df = pd.read_csv('/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost.csv')
+# %%
+df = pd.read_csv(
+    '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost.csv')
 df.head()
 # %%
 df.dtypes
 # %%
- 

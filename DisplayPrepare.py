@@ -18,18 +18,23 @@ import pandas as pd
 
 
 # %%
-path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Input/Core/Parshub/ToolsInAction.csv"
+path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost/DevpostAnalysed.csv"
 data = pd.read_csv(path)
+
 
 # %%
 data.head()
 # %%
-path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost_Core.json"
+path = "/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Reddit/Phase_2/Phase2Analysed.json"
 with open(path, 'r') as f:
     jsonFile = json.loads(f.read())
 data = pd.json_normalize(jsonFile, record_path=['interestingcomments'])
 data.head()
 
+
+# %%
+
+data.shape
 # %%
 
 
@@ -64,7 +69,7 @@ dates = data.groupby('year').count()
 dates.head(15)
 
 # %%
-data.shape
+data.head()
 # %%
 SelectedP = data.loc[data["result"] == True]
 SelectedP.shape
@@ -99,7 +104,7 @@ Output = SelectedP
 interestingcommment = {}
 interestingcommment["interestingcomments"] = []
 
-folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Reddit/Selected_Posts_Round2/'
+folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Reddit/Phase_2/Analysed/'
 
 
 for sub in s_list:
@@ -136,7 +141,7 @@ Output = SelectedP
 interestingcommment = {}
 interestingcommment["interestingcomments"] = []
 
-folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Trend/Github/Github/'
+folder = '/Users/joshcornau/Code/LeadUserAnalysis/data/_Output/Core/Parsehub/Devpost/'
 
 for sub in s_list:
     redpath = folder+sub
